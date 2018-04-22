@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:orderInCategory="1"
+        android:id="@+id/fab_download_photo"
+        android:icon="@drawable/ic_action_download"
+        android:title="Download photo"/>
+    <item
+        android:orderInCategory="2"
+        android:id="@+id/fab_share_photo"
+        android:icon="@drawable/ic_action_share"
+        android:title="Download photo"/>
+    <item
+        android:orderInCategory="3"
+        android:id="@+id/fab_wallpaper_photo"
+        android:icon="@drawable/ic_action_wallpaper"
+        android:title="Download photo"/>
+</menu>
