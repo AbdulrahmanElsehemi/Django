@@ -22,20 +22,13 @@ import android.view.View;
 
 import com.example.abdulrahman.bobsplash.Adapter.PhotosAdapter;
 import com.example.abdulrahman.bobsplash.Util.ListItemClickListener;
-import com.example.abdulrahman.bobsplash.api.ApiSearch;
-import com.example.abdulrahman.bobsplash.api.UnsplashService;
 import com.example.abdulrahman.bobsplash.model.PhotosResponse;
 import com.example.abdulrahman.bobsplash.model.Result;
 import com.example.abdulrahman.bobsplash.repository.NetworkState;
 import com.example.abdulrahman.bobsplash.repository.UserViewmodel;
-import com.example.abdulrahman.bobsplash.service.Const;
 
 import java.util.ArrayList;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity implements ListItemClickListener {
@@ -49,16 +42,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     RecyclerView recyclerView;
     Toolbar mToolbar;
 
-
-    private CompositeDisposable disposable = new CompositeDisposable();
-
-    UnsplashService apiService;
-
-    int   pageNumber;
-
-    private int lastVisibleItem, totalItemCount;
-
-
     PhotosAdapter photosAdapter;
 
     private ArrayList<Result> itemList = new ArrayList<>();
@@ -69,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        apiService = ApiSearch.getClient().create(UnsplashService.class);
 
 
         mToolbar =findViewById(R.id.home_toolBar);
@@ -94,12 +76,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         });
 
 
-
-
-
-
-
-
     }
 
 
@@ -114,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                  //searchData(query);
                 return true;
             }
 
@@ -128,54 +103,8 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
 
-        return true;
-    }
-
-/*
-    private void searchData(String localQuery)
-    {
-
-
-        disposable.add(apiService
-                .shearchPhotos(localQuery, Const.CLIENT_ID,pageNumber,Const.PER_PAGE)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<PhotosResponse>() {
-                    @Override
-                    public void onSuccess(PhotosResponse photosResponse) {
-                        if (photosResponse.getResults().isEmpty())
-                        {
-                            photosAdapter.addItems(photosResponse.getResults());
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                })
-
-        );
-
-    }
-
-    private  void serUploadMoewListener()
-    {
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                totalItemCount
-            }
-        });
-    }
-    */
 
 
     private  void  loadData()
@@ -208,25 +137,17 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
 
         recyclerView.setAdapter(userUserAdapter);
 
-
-
     }
 
     private void  initRecycler()
     {
         recyclerView = findViewById(R.id.userList);
         LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
-        // llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
     }
 
 
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     @Override
     public void onItemClick(View view, int position) {

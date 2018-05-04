@@ -6,6 +6,7 @@ import android.support.v7.recyclerview.extensions.DiffCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -40,9 +41,13 @@ public class PhotosResponse{
 	@SerializedName("user")
 	private User photoUser ;
 	@SerializedName("current_user_collection")
+
 	private ArrayList currentUserCollection;
 
-	public PhotosResponse(String photoID, String createdAt, String updatedAt, Integer width, Integer height, String color, String description, ArrayList categories, Urls photoUrls, Links links, boolean likedByUser, boolean sponsoredPhoto, Integer photoLikes, User photoUser, ArrayList currentUserCollection) {
+	@SerializedName("exif")
+	private Exif exif;
+
+	public PhotosResponse(String photoID, String createdAt, String updatedAt, Integer width, Integer height, String color, String description, ArrayList categories, Urls photoUrls, Links links, boolean likedByUser, boolean sponsoredPhoto, Integer photoLikes, User photoUser, ArrayList currentUserCollection,Exif exif) {
 		this.photoID = photoID;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -58,7 +63,12 @@ public class PhotosResponse{
 		this.photoLikes = photoLikes;
 		this.photoUser = photoUser;
 		this.currentUserCollection = currentUserCollection;
+		this.exif=exif;
+
+
 	}
+
+
 
 	public String getPhotoID() {
 		return photoID;
@@ -116,9 +126,17 @@ public class PhotosResponse{
 		return photoUser;
 	}
 
+
+	public Exif getExif(){
+		return exif;
+	}
+
+
+
 	public ArrayList getCurrentUserCollection() {
 		return currentUserCollection;
 	}
+
 
 	public static DiffCallback<PhotosResponse> DIFF_CALLBACK = new DiffCallback<PhotosResponse>() {
 		@Override
@@ -149,7 +167,7 @@ public class PhotosResponse{
 	private List<Result> results = null;
 
 
-	public List<Result> getResults() {
-		return results;
-	}
+
+
+
 }

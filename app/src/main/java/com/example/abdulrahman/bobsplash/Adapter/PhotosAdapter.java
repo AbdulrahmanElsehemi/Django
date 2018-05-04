@@ -4,10 +4,7 @@ import android.app.Activity;
 
 import android.arch.paging.PagedListAdapter;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.DiffCallback;
 import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -19,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import com.example.abdulrahman.bobsplash.ImageDetail;
+import com.example.abdulrahman.bobsplash.ImageDetailActivity;
 import com.example.abdulrahman.bobsplash.R;
 import com.example.abdulrahman.bobsplash.Util.ListItemClickListener;
 
@@ -32,7 +29,6 @@ import com.example.abdulrahman.bobsplash.repository.Status;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,9 +46,6 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
     private ArrayList<Result> itemList;
 
 
-
-
-
     public PhotosAdapter(ListItemClickListener itemClickListener, Activity activity) {
         super(PhotosResponse.DIFF_CALLBACK);
         this.itemClickListener = itemClickListener;
@@ -67,16 +60,6 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
         this.itemList=itemList;
 
     }
-
-    //append photos to list
-    public void addItems(List<Result> itemList) {
-        for (Result result:itemList) {
-            this.itemList.add(result);
-            notifyDataSetChanged();
-        }
-    }
-
-
 
 
     @Override
@@ -100,7 +83,7 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case R.layout.photo_item:
-                ((PhotoItemViewHolder) holder).bindTo(getItem(position));
+                ((PhotoItemViewHolder) holder).BindItemTo(getItem(position));
                 break;
             case R.layout.network_state_item:
                 ((NetworkStateItemViewHolder) holder).bindView(networkState);
@@ -153,9 +136,6 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
         TextView photographerLikes;
         TextView imageDec;
 
-
-
-
         public PhotoItemViewHolder(View itemView, Activity activity) {
             super(itemView);
             mActivity = activity;
@@ -172,26 +152,24 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
         }
 
 
-        public void bindTo(final PhotosResponse objects) {
+        public void BindItemTo(final PhotosResponse response) {
 
-            final Urls urls = objects.getPhotoUrls();
-            final User user=objects.getPhotoUser();
-
-
+            final Urls urls = response.getPhotoUrls();
+            final User user=response.getPhotoUser();
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    //Toast.makeText(mActivity,"Photo  "+ objects.getPhotoID(), Toast.LENGTH_SHORT).show();
 
-                    Intent intent =new Intent(mActivity, ImageDetail.class);
+                    Intent intent =new Intent(mActivity, ImageDetailActivity.class);
 
-                    intent.putExtra(ImageDetail.KEY_PHOTO_URL , urls.getRegular());
-                    intent.putExtra(ImageDetail.KEY_PHOTOGRAPHER_IMG , user.getProfileImage().getLarge());
-                    intent.putExtra(ImageDetail.KEY_USER_LOCATION , user.getLocation());
-                    intent.putExtra(ImageDetail.KEY_USER_NAME , user.getFirstName()+" "+user.getLastName());
-                    intent.putExtra(ImageDetail.KEY_PHOTO_TIME,objects.getCreatedAt());
+                    intent.putExtra(ImageDetailActivity.KEY_PHOTO_URL , urls.getRegular());
+                    intent.putExtra(ImageDetailActivity.KEY_PHOTOGRAPHER_IMG , user.getProfileImage().getLarge());
+                    intent.putExtra(ImageDetailActivity.KEY_USER_LOCATION , user.getLocation());
+                    intent.putExtra(ImageDetailActivity.KEY_USER_NAME , user.getFirstName()+" "+user.getLastName());
+                    intent.putExtra(ImageDetailActivity.KEY_PHOTO_TIME,response.getCreatedAt());
+
 
                     mActivity.startActivity(intent);
 
@@ -205,11 +183,8 @@ public class PhotosAdapter extends PagedListAdapter<PhotosResponse,RecyclerView.
 
             photographerName.setText(user.getFirstName()+" "+user.getLastName());
             photographerLoaction.setText(user.getLocation());
-            photographerLikes.setText(objects.getPhotoLikes().toString());
+            photographerLikes.setText(response.getPhotoLikes().toString());
             imageDec.setText(user.getBio());
-
-
-
 
 
 

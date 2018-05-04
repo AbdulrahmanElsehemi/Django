@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.abdulrahman.bobsplash.service.Const;
@@ -34,11 +35,9 @@ import com.example.abdulrahman.bobsplash.service.DownloadService;
 import com.squareup.picasso.Picasso;
 
 
-import java.io.IOException;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ImageDetail extends AppCompatActivity {
+public class ImageDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "ViewPagerActivity";
 
@@ -57,17 +56,14 @@ public class ImageDetail extends AppCompatActivity {
 
     Toolbar mToolbar;
 
-
     ImageView detailPhoto;
     CircleImageView photographerImg;
     TextView photographerName;
     TextView photographerLocation;
     TextView photoTime;
 
-
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
-
 
     ResponseReceiver responseReceiver;
 
@@ -75,16 +71,11 @@ public class ImageDetail extends AppCompatActivity {
     FloatingActionButton fabSetWallpaper;
     FloatingActionButton fabSharePhoto;
 
-
-
-
     WallpaperManager wallpaperManager ;
     Bitmap bitmap1, bitmap2 ;
     DisplayMetrics displayMetrics ;
     int width, height;
     BitmapDrawable bitmapDrawable ;
-
-
 
 
 
@@ -98,8 +89,6 @@ public class ImageDetail extends AppCompatActivity {
         setupIntentExtras();
         setupViewsWithExtras();
 
-
-
         fabSetWallpaper=findViewById(R.id.fab_setwallpaper_photo);
         fabDownlaod=findViewById(R.id.fab_download_photo);
         fabSharePhoto=findViewById(R.id.fab_share_photo_);
@@ -111,6 +100,10 @@ public class ImageDetail extends AppCompatActivity {
                 if (isStoragePermissionGranted())
                 {
                     downLoadphoto();
+                }
+                else
+                {
+                    Toast.makeText(ImageDetailActivity.this,"permission Denied",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -128,7 +121,6 @@ public class ImageDetail extends AppCompatActivity {
         });
 
 
-
         bitmapDrawable=(BitmapDrawable)detailPhoto.getDrawable();
         bitmap1= bitmapDrawable.getBitmap();
 
@@ -140,7 +132,7 @@ public class ImageDetail extends AppCompatActivity {
 
                 SetBitmapSize();
 
-                wallpaperManager=WallpaperManager.getInstance(ImageDetail.this);
+                wallpaperManager=WallpaperManager.getInstance(ImageDetailActivity.this);
 
                 try {
 
@@ -158,8 +150,6 @@ public class ImageDetail extends AppCompatActivity {
 
 
     }
-
-
 
 
     public void GetScreenWidthHeight(){
@@ -241,8 +231,8 @@ public class ImageDetail extends AppCompatActivity {
         photographerLocation.setText(userLocation);
         photoTime.setText("Shot in "+photoCreatedAt.split("T")[0]);
 
-        Picasso.with(ImageDetail.this).load(photoUrlRegular).into(detailPhoto);
-        Picasso.with(ImageDetail.this).load(photographerImgUrl).into(photographerImg);
+        Picasso.with(ImageDetailActivity.this).load(photoUrlRegular).into(detailPhoto);
+        Picasso.with(ImageDetailActivity.this).load(photographerImgUrl).into(photographerImg);
     }
 
     private void downLoadphoto()
@@ -250,14 +240,14 @@ public class ImageDetail extends AppCompatActivity {
         String url=photoUrlRegular;
 
         mNotifyManager=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder=new NotificationCompat.Builder(ImageDetail.this,"channel_id");
+        mBuilder=new NotificationCompat.Builder(ImageDetailActivity.this,"channel_id");
         mBuilder.setContentTitle("File Download")
                 .setContentText("Download in progress")
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         R.mipmap.ic_launcher));
 
-        Intent intent = new Intent(ImageDetail.this, DownloadService.class);
+        Intent intent = new Intent(ImageDetailActivity.this, DownloadService.class);
         intent.putExtra(Const.My_INTENT_DOWNLOAD,url);
         startService(intent);
 
@@ -291,11 +281,11 @@ public class ImageDetail extends AppCompatActivity {
                 // Displays the progress bar on notification
                 mNotifyManager.notify(0, mBuilder.build());
             } else {
-                Intent notificationIntent = new Intent(ImageDetail.this, MainActivity.class);
+                Intent notificationIntent = new Intent(ImageDetailActivity.this, MainActivity.class);
                 Log.d(TAG, "NOTIFY_URL: "+intent.getStringExtra(Const.NOTIFY_URL));
                 notificationIntent.putExtra(Const.NOTIFY_OPEN_URL,intent.getStringExtra(Const.NOTIFY_URL));
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent = PendingIntent.getActivity(ImageDetail.this, 0,
+                PendingIntent pendingIntent = PendingIntent.getActivity(ImageDetailActivity.this, 0,
                         notificationIntent, 0);
                 mBuilder.setContentIntent(pendingIntent);
                 mBuilder.setAutoCancel(true);
