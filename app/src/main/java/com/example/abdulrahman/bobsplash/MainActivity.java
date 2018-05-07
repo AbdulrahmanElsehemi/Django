@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
 
         mToolbar =findViewById(R.id.home_toolBar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("BoB Splash");
+        getSupportActionBar().setTitle("Django");
 
         photosAdapter=new PhotosAdapter(MainActivity.this,itemList);
 
